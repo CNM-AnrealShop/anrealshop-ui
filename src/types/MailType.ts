@@ -1,0 +1,1 @@
+export type MailType =   "VERIFY_EMAIL" |  "RESET_PASSWORD"
