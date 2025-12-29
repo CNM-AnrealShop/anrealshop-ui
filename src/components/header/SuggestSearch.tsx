@@ -90,10 +90,7 @@ const SuggestSearch: React.FC<SuggestSearchProps> = ({
   }, [searchTerm, visible]);
 
   if (!visible) return null;
-
-  // Define blur class based on withBlur prop
   const blurClass = !withBlur ? '!backdrop-blur-md !bg-white/80' : '!bg-white';
-  console.log('blurClass', withBlur);
 
   // Loading state
   if (loading) {

@@ -2,10 +2,10 @@ import { API_ENDPOINTS } from "../constant";
 import type { UserParams } from "../hooks/useUser";
 import type { RejectRequest } from "../types/CommonType";
 import type { ChangePasswordDto, forgotPwRequest } from "../types/UserType";
-import { axiosInstance, axiosNoWithCredInstance } from "./AxiosInstant";
+import { axiosInstance } from "./AxiosInstant";
 
 const forgotPassword = async (forgotPassword: forgotPwRequest) => {
-    const response = await axiosNoWithCredInstance.post(
+    const response = await axiosInstance.post(
         `${API_ENDPOINTS.AUTH.FORGOT_PASSWORD}`,
         forgotPassword
     )

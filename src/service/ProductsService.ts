@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "../constant";
 import type { UseProductParams } from "../hooks/useProduct";
 import type { MyShopProductDto, MyShopProductListResponse, ProductCreateRequest, ProductDetailDto, ProductStatusDto } from "../types/ProductType";
 import { getParams } from "../untils/Untils";
-import { axiosInstance, axiosNoWithCredInstance } from "./AxiosInstant";
+import { axiosInstance } from "./AxiosInstant";
 
 const create = async (data: ProductCreateRequest) => {
     const response = await axiosInstance.post(API_ENDPOINTS.PRODUCTS.CREATE, data);
@@ -10,7 +10,7 @@ const create = async (data: ProductCreateRequest) => {
 }
 
 const getProductById = async (id: string): Promise<ProductDetailDto> => {
-    const response = await axiosNoWithCredInstance.get(API_ENDPOINTS.PRODUCTS.GET_BY_ID(id));
+    const response = await axiosInstance.get(API_ENDPOINTS.PRODUCTS.GET_BY_ID(id));
     return response.data;
 };
 
@@ -30,7 +30,7 @@ const getListTrending = async () => {
 
 const getListRecommended = async (params?: UseProductParams) => {
     const queryParams = getParams(params || {});
-    const response = await axiosNoWithCredInstance.get(`${API_ENDPOINTS.PRODUCTS.GET_RECOMMENDED_PRODUCTS}?${queryParams}`); 
+    const response = await axiosInstance.get(`${API_ENDPOINTS.PRODUCTS.GET_RECOMMENDED_PRODUCTS}?${queryParams}`); 
     return response.data;
 };
 

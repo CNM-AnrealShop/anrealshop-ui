@@ -9,7 +9,6 @@ import '@mantine/notifications/styles.css';
 import './App.css';
 import { APP_ROUTES } from './constant';
 import { useAppDispatch, useAppSelector } from './hooks/useAppRedux';
-import { connectWs, disconnectWs } from './service/websocketClient';
 import { fetchCurrentUser } from './store/authSlice';
 
 const AuthoPage = lazy(() => import('./pages/Auth/AuthoPage'));
@@ -61,16 +60,6 @@ function App() {
     if (!user && !isAuthenticated) {
       dispatch(fetchCurrentUser());
     }
-    if (user) {
-      connectWs();
-    }
-    if (!user) {
-      disconnectWs();
-    }
-
-    return () => {
-      disconnectWs();
-    };
   }, [user]);
 
   return (

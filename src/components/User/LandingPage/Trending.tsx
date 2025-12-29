@@ -2,7 +2,6 @@ import { Container, Text } from "@mantine/core";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CategoryService } from "../../../service/CategoryService";
 import type { CategoryDisplayDto } from "../../../types/CategoryType";
 
 interface TrendingProps {
@@ -50,11 +49,10 @@ const Trending = ({ id }: TrendingProps) => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
-        const data = await CategoryService.getPublicCategoriesDisplay(
-          "HOMEPAGE"
-        );
-        console.log("Fetched categories for Trending:", data);
-        setCategories(data);
+        // const data = await CategoryService.getPublicCategoriesDisplay(
+        //   "HOMEPAGE"
+        // );
+        // setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
         setCategories([]);
