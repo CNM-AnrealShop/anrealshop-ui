@@ -1,17 +1,25 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { API_ENDPOINTS } from '../constant';
-import authService from '../service/AuthService';
-import type { AddressDto } from '../types/AddressType';
-import type { LoginRequest, LoginResponse } from '../types/AuthType';
-import type { ErrorResponseDto } from '../types/CommonType';
-import type { ShopDto } from '../types/ShopType';
-import type { ProfileRequest, RegisterRequest, UserDto } from '../types/UserType';
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+import { API_ENDPOINTS } from "../constant";
+import authService from "../service/AuthService";
+import type { AddressDto } from "../types/AddressType";
+import type { LoginRequest, LoginResponse } from "../types/AuthType";
+import type { ErrorResponseDto } from "../types/CommonType";
+import type { ShopDto } from "../types/ShopType";
+import type {
+  ProfileRequest,
+  RegisterRequest,
+  UserDto,
+} from "../types/UserType";
 
 interface AuthError {
   message: string;
   code?: string;
   statusCode?: number;
-  details?: ErrorResponseDto['details'];
+  details?: ErrorResponseDto["details"];
   traceId?: string;
 }
 
@@ -19,7 +27,7 @@ interface AuthState {
   user: UserDto | null;
   shop: ShopDto | null;
   isAuthenticated: boolean;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: AuthError | null;
 }
 
@@ -27,7 +35,7 @@ const initialState: AuthState = {
   user: null,
   shop: null,
   isAuthenticated: false,
-  status: 'idle',
+  status: "idle",
   error: null,
 };
 
@@ -40,7 +48,7 @@ export const loginUser = createAsyncThunk(
     } catch (error: any) {
       const response = error.response.data as ErrorResponseDto;
       const authError: AuthError = {
-        message: response.message || 'Đăng nhập thất bại.',
+        message: response.message || "Đăng nhập thất bại.",
         code: response.code,
         // statusCode: response.code,
         details: response.details,
@@ -51,17 +59,16 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-
 export const fetchCurrentUser = createAsyncThunk(
-  'auth/fetchCurrentUser',
+  "auth/fetchCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
       const user: UserDto = await authService.getProfile();
-      console.log('Fetched user:', user);
+      console.log("Fetched user:", user);
       return user;
     } catch (error: any) {
       const authError: AuthError = {
-        message: error.message || 'Không thể xác thực người dùng.',
+        message: error.message || "Không thể xác thực người dùng.",
         code: error.code,
         statusCode: error.statusCode,
         details: error.details,
@@ -73,14 +80,14 @@ export const fetchCurrentUser = createAsyncThunk(
 );
 
 export const fetchCurrentShop = createAsyncThunk(
-  'shopAuth/fetchCurrentShop',
+  "shopAuth/fetchCurrentShop",
   async (_, { rejectWithValue }) => {
     try {
       const response: ShopDto = await authService.getShopInfo();
       return response;
     } catch (error: any) {
       const shopAuthError: AuthError = {
-        message: error.message || 'Không thể xác thực cửa hàng.',
+        message: error.message || "Không thể xác thực cửa hàng.",
         code: error.code,
         statusCode: error.statusCode,
         details: error.details,
@@ -91,16 +98,15 @@ export const fetchCurrentShop = createAsyncThunk(
   }
 );
 
-
 export const updateUserProfile = createAsyncThunk(
-  'auth/updateUserProfile',
+  "auth/updateUserProfile",
   async (profileData: ProfileRequest, { rejectWithValue }) => {
     try {
       const updatedUser: UserDto = await authService.updateProfile(profileData);
       return updatedUser;
     } catch (error: any) {
       const authError: AuthError = {
-        message: error.message || 'Cập nhật thông tin thất bại.',
+        message: error.message || "Cập nhật thông tin thất bại.",
         code: error.code,
         statusCode: error.statusCode,
         details: error.details,
@@ -119,7 +125,7 @@ export const logoutUser = createAsyncThunk(
       return true;
     } catch (error: any) {
       const authError: AuthError = {
-        message: error.message || 'Đăng xuất thất bại.',
+        message: error.message || "Đăng xuất thất bại.",
         code: error.code,
         statusCode: error.statusCode,
         details: error.details,
@@ -138,7 +144,7 @@ export const registerUser = createAsyncThunk(
       return response;
     } catch (error: any) {
       const authError: AuthError = {
-        message: error.message || 'Đăng ký thất bại.',
+        message: error.message || "Đăng ký thất bại.",
         code: error.code,
         statusCode: error.statusCode,
         details: error.details,
@@ -150,7 +156,7 @@ export const registerUser = createAsyncThunk(
 );
 
 const userAuthSlice = createSlice({
-  name: 'userAuth',
+  name: "userAuth",
   initialState,
   reducers: {
     addToCart: (state) => {
@@ -180,10 +186,16 @@ const userAuthSlice = createSlice({
       }
     },
 
+    setUser: (state, action: PayloadAction<UserDto>) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+      state.status = "succeeded";
+    },
+
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      state.status = 'idle';
+      state.status = "idle";
       state.error = null;
       state.shop = null;
     },
@@ -210,89 +222,109 @@ const userAuthSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-        state.status = 'succeeded';
-        state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.error = null;
-      })
+      .addCase(
+        loginUser.fulfilled,
+        (state, action: PayloadAction<LoginResponse>) => {
+          state.status = "succeeded";
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+          state.error = null;
+        }
+      )
       .addCase(loginUser.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.isAuthenticated = false;
         state.user = null;
-        state.error = (action.payload as AuthError) || { message: 'Đăng nhập thất bại không xác định.' };
+        state.error = (action.payload as AuthError) || {
+          message: "Đăng nhập thất bại không xác định.",
+        };
       })
       .addCase(fetchCurrentUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchCurrentUser.fulfilled, (state, action: PayloadAction<UserDto>) => {
-        state.status = 'succeeded';
-        state.isAuthenticated = true;
-        state.user = action.payload;
-        state.error = null;
-      })
+      .addCase(
+        fetchCurrentUser.fulfilled,
+        (state, action: PayloadAction<UserDto>) => {
+          state.status = "succeeded";
+          state.isAuthenticated = true;
+          state.user = action.payload;
+          state.error = null;
+        }
+      )
       .addCase(fetchCurrentUser.rejected, (state) => {
-        state.status = 'idle';
+        state.status = "idle";
         state.isAuthenticated = false;
         state.user = null;
         state.error = null;
       })
       .addCase(fetchCurrentShop.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchCurrentShop.fulfilled, (state, action: PayloadAction<ShopDto>) => {
-        state.status = 'succeeded';
-        state.shop = action.payload;
-        state.isAuthenticated = true;
-        if (state.user) {
-          state.user.hasShop = !!action.payload;
+      .addCase(
+        fetchCurrentShop.fulfilled,
+        (state, action: PayloadAction<ShopDto>) => {
+          state.status = "succeeded";
+          state.shop = action.payload;
+          state.isAuthenticated = true;
+          if (state.user) {
+            state.user.hasShop = !!action.payload;
+          }
+          state.error = null;
         }
-        state.error = null;
-      })
+      )
       .addCase(fetchCurrentShop.rejected, (state) => {
-        state.status = 'idle';
+        state.status = "idle";
         state.shop = null;
       })
       .addCase(updateUserProfile.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
-      .addCase(updateUserProfile.fulfilled, (state, action: PayloadAction<UserDto>) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-        state.error = null;
-      })
+      .addCase(
+        updateUserProfile.fulfilled,
+        (state, action: PayloadAction<UserDto>) => {
+          state.status = "succeeded";
+          state.user = action.payload;
+          state.error = null;
+        }
+      )
       .addCase(updateUserProfile.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = (action.payload as AuthError) || { message: 'Cập nhật thông tin thất bại.' };
+        state.status = "failed";
+        state.error = (action.payload as AuthError) || {
+          message: "Cập nhật thông tin thất bại.",
+        };
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
-        state.status = 'idle';
+        state.status = "idle";
         state.error = null;
         state.shop = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = (action.payload as AuthError) || { message: 'Đăng xuất thất bại.' };
+        state.status = "failed";
+        state.error = (action.payload as AuthError) || {
+          message: "Đăng xuất thất bại.",
+        };
       })
       .addCase(registerUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = (action.payload as AuthError) || { message: 'Đăng ký thất bại.' };
+        state.status = "failed";
+        state.error = (action.payload as AuthError) || {
+          message: "Đăng ký thất bại.",
+        };
       });
   },
 });
@@ -303,6 +335,7 @@ export const {
   removeFromCart,
   updateCartCount,
   clearCart,
+  setUser,
   logout,
   createShopForUser,
   updateVerifiedStatus,
