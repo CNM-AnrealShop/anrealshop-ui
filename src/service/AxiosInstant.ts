@@ -1,25 +1,24 @@
-import type { EnhancedStore } from '@reduxjs/toolkit';
-import axios from 'axios';
-import showErrorNotification from '../components/Toast/NotificationError';
-import { APP_ROUTES_PUBLIC, BASE_API_URL } from '../constant';
-import type { ErrorResponseDto } from '../types/CommonType';
-
+import type { EnhancedStore } from "@reduxjs/toolkit";
+import axios from "axios";
+import showErrorNotification from "../components/Toast/NotificationError";
+import { APP_ROUTES_PUBLIC, BASE_API_URL } from "../constant";
+import type { ErrorResponseDto } from "../types/CommonType";
 
 const getCookie = (name: string) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
   return null;
 };
 
 const axiosInstance = axios.create({
   baseURL: BASE_API_URL,
   withCredentials: true,
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
@@ -30,16 +29,23 @@ export const setupAxiosInterceptors = (
   const redirectToLoginWithDelay = () => {
     store.dispatch(logoutAction());
 
-    const currentPath = window.location.pathname.split('/');
-    if (APP_ROUTES_PUBLIC.includes(currentPath[1] ? `/${currentPath[1]}` : '/')) {
+    const currentPath = window.location.pathname.split("/");
+    if (
+      APP_ROUTES_PUBLIC.includes(currentPath[1] ? `/${currentPath[1]}` : "/")
+    ) {
       return;
     }
 
-    const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
-    
-    if (window.location.pathname.includes('/login')) return;
+    const returnUrl = encodeURIComponent(
+      window.location.pathname + window.location.search
+    );
 
-    showErrorNotification("Thông báo", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+    if (window.location.pathname.includes("/login")) return;
+
+    showErrorNotification(
+      "Thông báo",
+      "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."
+    );
 
     setTimeout(() => {
       window.location.href = `/login?redirect=${returnUrl}`;
@@ -48,10 +54,15 @@ export const setupAxiosInterceptors = (
 
   axiosInstance.interceptors.request.use(
     (config) => {
-      const token = getCookie('XSRF-TOKEN');
-      
+      const token = getCookie("XSRF-TOKEN");
+
       if (token) {
-        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
+        config.headers["X-XSRF-TOKEN"] = decodeURIComponent(token);
+      }
+
+      const accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        config.headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
       return config;
@@ -62,9 +73,10 @@ export const setupAxiosInterceptors = (
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      console.log('Axios Error:', error);
+      console.log("Axios Error:", error);
       const statusCode = error.response?.status;
-      const errorResponseData: ErrorResponseDto | undefined = error.response?.data;
+      const errorResponseData: ErrorResponseDto | undefined =
+        error.response?.data;
 
       if (statusCode === 401 || statusCode === 419) {
         redirectToLoginWithDelay();
@@ -72,7 +84,9 @@ export const setupAxiosInterceptors = (
       }
 
       if (errorResponseData) {
-        const customError = new Error(errorResponseData.message || 'Đã có lỗi xảy ra từ server.');
+        const customError = new Error(
+          errorResponseData.message || "Đã có lỗi xảy ra từ server."
+        );
         (customError as any).code = errorResponseData.code;
         (customError as any).details = errorResponseData.details;
         (customError as any).traceId = errorResponseData.traceId;
@@ -81,7 +95,7 @@ export const setupAxiosInterceptors = (
         return Promise.reject(customError);
       }
 
-      return Promise.reject(new Error('Mất kết nối server.'));
+      return Promise.reject(new Error("Mất kết nối server."));
     }
   );
 };

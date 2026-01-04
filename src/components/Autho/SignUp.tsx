@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -9,18 +8,23 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { FaFacebook, FaGoogle } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/useAppRedux';
-import { registerUser } from '../../store/authSlice';
-import type { RegisterRequest } from '../../types/UserType';
-import { validateAgreeTerms, validateConfirmPassword, validateEmail, validatePassword } from '../../untils/ValidateInput';
-import showErrorNotification from '../Toast/NotificationError';
-import showSuccessNotification from '../Toast/NotificationSuccess';
-import { GOOGLE_LOGIN_URL } from '../../constant';
-import { motion } from 'framer-motion';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "../../hooks/useAppRedux";
+import { registerUser } from "../../store/authSlice";
+import type { RegisterRequest } from "../../types/UserType";
+import {
+  validateAgreeTerms,
+  validateConfirmPassword,
+  validateEmail,
+  validatePassword,
+} from "../../untils/ValidateInput";
+import showErrorNotification from "../Toast/NotificationError";
+import showSuccessNotification from "../Toast/NotificationSuccess";
+import OAuthService from "../../service/OAuthService";
 
 interface SignUpFormValues {
   fullName: string;
@@ -34,18 +38,18 @@ export function SignUp() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.auth);
-  const isLoading = status === 'loading';
+  const isLoading = status === "loading";
 
   const form = useForm<SignUpFormValues>({
     initialValues: {
-      fullName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
       agreeTerms: false,
     },
     validate: {
-      fullName: (value) => (value ? null : 'Họ tên là bắt buộc'),
+      fullName: (value) => (value ? null : "Họ tên là bắt buộc"),
       email: (value) => {
         return validateEmail(value);
       },
@@ -66,34 +70,42 @@ export function SignUp() {
       fullName: values.fullName,
       email: values.email,
       password: values.password,
-    }
+    };
     try {
       await dispatch(registerUser(registerData)).unwrap();
-      showSuccessNotification('Đăng ký thành công!', `Chào mừng ${values.fullName || " bạn"} đến với hệ thống!`);
-      navigate('/login');
+      showSuccessNotification(
+        "Đăng ký thành công!",
+        `Chào mừng ${values.fullName || " bạn"} đến với hệ thống!`
+      );
+      navigate("/login");
     } catch (err: any) {
-      console.error('Registration failed:', err);
-      let notificationMessage = err.message || 'Đã có lỗi xảy ra trong quá trình đăng ký.';
+      console.error("Registration failed:", err);
+      let notificationMessage =
+        err.message || "Đã có lỗi xảy ra trong quá trình đăng ký.";
 
       if (err.statusCode === 400 && err.details && Array.isArray(err.details)) {
         err.details.forEach((itemError: { field: string; message: string }) => {
-          const formField = itemError.field === 'username' ? 'email' : itemError.field;
+          const formField =
+            itemError.field === "username" ? "email" : itemError.field;
           if (form.values.hasOwnProperty(formField)) {
             form.setFieldError(formField, itemError.message);
           }
         });
-        notificationMessage = err.message || 'Dữ liệu nhập vào không hợp lệ.';
+        notificationMessage = err.message || "Dữ liệu nhập vào không hợp lệ.";
       }
 
-      showErrorNotification('Đăng ký thất bại', notificationMessage);
+      showErrorNotification("Đăng ký thất bại", notificationMessage);
     }
   };
 
+  const handleGoogleLogin = async () => {
+    await OAuthService.loginWithGoogle();
+  };
 
+  const handleFacebookLogin = async () => {
+    await OAuthService.loginWithFacebook();
+  };
 
-  const handleGoogleLogin = () => {
-    window.location.href = GOOGLE_LOGIN_URL;
-  }
   return (
     <motion.div
       className="w-1/2 bg-white flex items-center justify-center p-8"
@@ -107,7 +119,10 @@ export function SignUp() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <Title order={1} className="text-3xl font-bold mb-6 text-center text-slate-800">
+        <Title
+          order={1}
+          className="text-3xl font-bold mb-6 text-center text-slate-800"
+        >
           Đăng ký
         </Title>
 
@@ -118,7 +133,9 @@ export function SignUp() {
               placeholder="Nhập tên đây nha thượng đế"
               required
               value={form.values.fullName}
-              onChange={(event) => form.setFieldValue('fullName', event.currentTarget.value)}
+              onChange={(event) =>
+                form.setFieldValue("fullName", event.currentTarget.value)
+              }
               error={form.errors.fullName}
               size="md"
             />
@@ -128,7 +145,9 @@ export function SignUp() {
               placeholder="email nè"
               required
               value={form.values.email}
-              onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+              onChange={(event) =>
+                form.setFieldValue("email", event.currentTarget.value)
+              }
               error={form.errors.email}
               size="md"
             />
@@ -138,17 +157,21 @@ export function SignUp() {
               placeholder="Ngày sinh người yêu cũ ha -.-"
               required
               value={form.values.password}
-              onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+              onChange={(event) =>
+                form.setFieldValue("password", event.currentTarget.value)
+              }
               error={form.errors.password}
               size="md"
             />
 
             <PasswordInput
               label="Xác nhận mật khẩu"
-              placeholder="Nhang lại mật khẩu của bạn"
+              placeholder="Nhập lại mật khẩu của bạn"
               required
               value={form.values.confirmPassword}
-              onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
+              onChange={(event) =>
+                form.setFieldValue("confirmPassword", event.currentTarget.value)
+              }
               error={form.errors.confirmPassword}
               size="md"
             />
@@ -156,7 +179,9 @@ export function SignUp() {
             <Checkbox
               label="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
               checked={form.values.agreeTerms}
-              onChange={(event) => form.setFieldValue('agreeTerms', event.currentTarget.checked)}
+              onChange={(event) =>
+                form.setFieldValue("agreeTerms", event.currentTarget.checked)
+              }
               error={form.errors.agreeTerms}
             />
 
@@ -164,7 +189,7 @@ export function SignUp() {
               fullWidth
               type="submit"
               loading={isLoading}
-              // className="bg-primary hover:bg-primary/90 mt-4"
+              className="bg-primary hover:bg-primary/90 mt-4"
               size="md"
               disabled={isLoading || form.values.agreeTerms === false}
             >
@@ -180,7 +205,7 @@ export function SignUp() {
             leftSection={<FaGoogle size={16} />}
             variant="outline"
             className="border-gray-300"
-            onClick={() => handleGoogleLogin()}
+            onClick={handleGoogleLogin}
           >
             Google
           </Button>
@@ -188,15 +213,18 @@ export function SignUp() {
             leftSection={<FaFacebook size={16} />}
             variant="outline"
             className="border-gray-300"
-            onClick={() => showSuccessNotification('Chức năng đang phát triển', 'Đăng ký bằng Facebook sẽ sớm được ra mắt!')}
+            onClick={handleFacebookLogin}
           >
             Facebook
           </Button>
         </Group>
 
         <Text className="!mt-6 text-center !text-sm text-gray-600">
-          Đã có tài khoản?{' '}
-          <Link to="/login" className="text-primary font-medium hover:underline">
+          Đã có tài khoản?{" "}
+          <Link
+            to="/login"
+            className="text-primary font-medium hover:underline"
+          >
             Đăng nhập
           </Link>
         </Text>
