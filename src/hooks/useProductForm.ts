@@ -40,7 +40,7 @@ export const useProductForm = (isEditMode = false) => {
                 return null;
             },
             description: (value) => {
-                if (!value.trim()) return 'Mô tả sản phẩm không được để trống';
+                if (!value) return 'Mô tả sản phẩm không được để trống';
                 return null;
             },
             sortDescription: (value) => {
@@ -156,12 +156,31 @@ export const useProductForm = (isEditMode = false) => {
 
         setIsLoading(true);
 
+        const request: any = form.values;
+        request.attributes = form.values.attributes.map(attr => ({
+            attributeKeyName: attr.attributeKeyName,
+            attributeKeyDisplay: attr.attributeKeyDisplay,
+            values: Array.isArray(attr.values)
+                ? attr.values
+                : Array.from(attr.values)
+        }));
+        request.productSkus = form.values.productSkus.map(sku => ({
+            ...sku,
+            attributes: sku.attributes.map(attr => ({
+                attributeKeyName: attr.attributeKeyName,
+                attributeKeyDisplay: attr.attributeKeyDisplay,
+                values: Array.isArray(attr.values)
+                    ? attr.values
+                    : Array.from(attr.values)
+            }))
+        }));
+
         try {
             if (isEditMode && id) {
-                await ProductsService.update(id, form.values);
+                await ProductsService.update(id, request);
                 showSuccessNotification('Thành công', 'Sản phẩm đã được cập nhật thành công.');
             } else {
-                await ProductsService.create(form.values);
+                await ProductsService.create(request);
                 showSuccessNotification('Thành công', 'Sản phẩm đã được tạo thành công.');
                 // clearForm();
             }
