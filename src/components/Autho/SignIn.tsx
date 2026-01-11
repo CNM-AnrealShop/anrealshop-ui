@@ -46,7 +46,7 @@ export function SignIn() {
   const form = useForm<SignInFormValues>({
     initialValues: {
       email: "botgiatv2@gmail.com",
-      password: "Abc@1234",
+      password: "Abc123456@",
     },
     validate: {
       email: (value) => {

@@ -18,7 +18,6 @@ const login = async (loginRequest: LoginRequest): Promise<LoginResponse> => {
     API_ENDPOINTS.AUTH.LOGIN,
     loginRequest,
   );
-
   return response.data;
 };
 

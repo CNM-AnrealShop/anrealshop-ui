@@ -18,7 +18,7 @@ const UserRoute = lazy(() => import("./pages/MyshopPage/UserRoute"));
 const RegisterShopPage = lazy(
   () => import("./components/User/RegisterShopPage/RegisterShopPage")
 );
-const OAuthPage = lazy(() => import("./components/Autho/Oauth"));
+const OAuthPage = lazy(() => import("./components/Autho/OAuth"));
 
 function App() {
   const theme = createTheme({

@@ -46,7 +46,7 @@ export const loginUser = createAsyncThunk(
       const response: LoginResponse = await authService.login(loginData);
       return response;
     } catch (error: any) {
-      const response = error.response.data as ErrorResponseDto;
+      const response = error as ErrorResponseDto;
       const authError: AuthError = {
         message: response.message || "Đăng nhập thất bại.",
         code: response.code,
