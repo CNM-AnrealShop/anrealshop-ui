@@ -17,6 +17,7 @@ import showErrorNotification from '../../../Toast/NotificationError';
 import AddressDisplayItem from './AddressDisplayItem';
 import ModalFormAddress from './ModalFormAddress';
 import { useAppSelector } from '../../../../hooks/useAppRedux';
+import showSuccessNotification from '../../../Toast/NotificationSuccess';
 
 
 interface AddressProps {
@@ -127,7 +128,7 @@ const Address: React.FC<AddressProps> = ({
               variant="outline"
               color="blue"
               size="xs"
-              onClick={() => setNewAddressModalOpened(true)}
+              onClick={() => showSuccessNotification('Chức năng đang được phát triển!')}
               className="hover:bg-picton-blue-50"
               leftSection={<FiPlus size={14} />}
             >Thêm mới
