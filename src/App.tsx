@@ -2,6 +2,7 @@ import { createTheme, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { lazy, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ChatBox } from "./components/ChatBox/ChatBox";
 
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -18,7 +19,7 @@ const UserRoute = lazy(() => import("./pages/MyshopPage/UserRoute"));
 const RegisterShopPage = lazy(
   () => import("./components/User/RegisterShopPage/RegisterShopPage")
 );
-const OAuthPage = lazy(() => import("./components/Autho/Oauth"));
+const OAuthPage = lazy(() => import("./components/Autho/OAuth"));
 
 function App() {
   const theme = createTheme({
@@ -84,6 +85,7 @@ function App() {
             </Routes>
           </main>
         </div>
+        <ChatBox />
       </BrowserRouter>
     </MantineProvider>
   );
