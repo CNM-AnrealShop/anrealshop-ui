@@ -64,7 +64,6 @@ export const fetchCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const user: UserDto = await authService.getProfile();
-      console.log("Fetched user:", user);
       return user;
     } catch (error: any) {
       const authError: AuthError = {

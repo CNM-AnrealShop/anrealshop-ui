@@ -10,6 +10,7 @@
 import React from 'react';
 import { FiEdit } from 'react-icons/fi';
 import type { AddressDto } from '../../../../types/AddressType';
+import showSuccessNotification from '../../../Toast/NotificationSuccess';
 
 
 interface AddressDisplayItemProps {
@@ -25,7 +26,7 @@ const AddressDisplayItem: React.FC<AddressDisplayItemProps> = ({
   isSelected,
   isInSelectionMode,
   onAddressClick,
-  onEditAddress,
+  // onEditAddress,
 }) => {
 
   return (
@@ -72,7 +73,7 @@ const AddressDisplayItem: React.FC<AddressDisplayItemProps> = ({
           variant="subtle"
           color="blue"
           size="xs" 
-          onClick={(e) => onEditAddress(e, address)}
+          onClick={() => showSuccessNotification('Chức năng đang được phát triển!')}
         >
           <FiEdit size={14} />
         </Button>

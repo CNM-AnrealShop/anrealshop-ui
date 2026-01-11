@@ -70,7 +70,7 @@ const CheckoutPage = () => {
 
   const refreshFee = useCallback(() => {
     if (!selectedAddress || itemCheckoutInfo.length < 1) return;
-    setFeeLoading(true);
+    setFeeLoading(true); 
     const checkoutShippingFee: CheckoutShippingFee = {
       userAddressId: selectedAddress.id,
       checkoutItems: Object.fromEntries(
