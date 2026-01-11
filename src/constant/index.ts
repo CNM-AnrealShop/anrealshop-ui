@@ -145,6 +145,12 @@ export const API_ENDPOINTS = {
     USER_ORDER_DETAILS: (orderId: string) => `/user/orders/${orderId}`,
     USER_REJECT_ORDER: (orderId: string) => `/user/orders/reject/${orderId}`,
   },
+
+  CHAT_AI: {
+    SAVE_MESSAGES: "/chat/messages",
+    GET_HISTORY: (limit: number = 50) => `/chat/history?limit=${limit}`,
+    CLEAR: "/chat/clear",
+  },
 };
 
 export const APP_ROUTES = {
