@@ -162,7 +162,10 @@ export const APP_ROUTES = {
   FORGOT_PASSWORD: "/forgot-password",
   CART: "/carts",
   CHECKOUT: "/checkout",
-  PAYMENT_RESULT: (orderId: string) => `/payment/result/${orderId}`,
+  PAYMENT_SUCCESS: "/payment/success",
+  PAYMENT_CANCEL: "/payment/cancel",
+  PAYMENT_SUCCESS_WITH_ORDER_ID: (orderId: string) =>
+    `/payment/success?orderId=${orderId}`,
   PRODUCT_DETAIL: "/products/:slug",
   USER_SETTINGS: "/settings/*",
   USER_PROFILE: "/settings/profile",
