@@ -7,28 +7,29 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { FiAlertTriangle, FiHome, FiPackage } from 'react-icons/fi';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { CheckoutService } from '../../../service/CheckoutService';
 import type { PaymentResultData } from '../../../types/PaymentResultType';
 import { getErrorMessage } from '../../../untils/ErrorUntils';
 import showErrorNotification from '../../Toast/NotificationError';
-import PaymentFailureView from './Error';
 import PaymentPendingView from './Pending';
 import { PaymentResultSkeleton } from './Skeleton';
 import PaymentSuccessView from './Success';
 import { LOCAL_STORAGE_KEYS } from '../../../constant';
+import OrderCreateSuccessView from './OrderCreateSuccessView';
 
 
 const PaymentResultPage = () => {
-    const { orderId } = useParams<{ orderId: string }>();
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get('orderId');
+
     const [loading, setLoading] = useState(true);
     const [paymentResult, setPaymentResult] = useState<PaymentResultData | null>(null);
     const [error, setError] = useState<boolean>(false);
-
+ 
     useEffect(() => {
         if (orderId) {
             setLoading(true);
-
             CheckoutService.getOrderResult(orderId)
                 .then(data => {
                     setPaymentResult(data);
@@ -88,13 +89,16 @@ const PaymentResultPage = () => {
         );
     }
 
-    if (paymentResult.paymentStatus === 'COMPLETED') {
-        return <PaymentSuccessView paymentResult={paymentResult} />;
-    } else if (paymentResult.paymentStatus === 'COD' || paymentResult.paymentMethod === 'cash_on_delivery') {
-        return <PaymentPendingView paymentResult={paymentResult} />;
+    if (paymentResult.paymentMethod === 'COD') {
+        return <OrderCreateSuccessView paymentResult={paymentResult} />;
     } else {
-        return <PaymentFailureView paymentResult={paymentResult} />;
+        if (paymentResult.paymentStatus === 'COMPLETED') {
+            return <PaymentSuccessView paymentResult={paymentResult} />;
+        } else {
+            return <PaymentPendingView paymentResult={paymentResult} />;
+        }
     }
+    
 };
 
 export default PaymentResultPage;

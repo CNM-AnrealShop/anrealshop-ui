@@ -96,14 +96,14 @@ const CheckoutPage = () => {
       return;
     }
 
-    if (user && !user.verified) {
-      showErrorNotification({
-        title: "Xác thực trước khi đặt hàng",
-        message: "Vui lòng xác thực email trước khi đặt hàng.",
-        onClick: () => navigate(getRedirectUrl(APP_ROUTES.USER_PROFILE))
-      });
-      return;
-    }
+    // if (user && !user.verified) {
+    //   showErrorNotification({
+    //     title: "Xác thực trước khi đặt hàng",
+    //     message: "Vui lòng xác thực email trước khi đặt hàng.",
+    //     onClick: () => navigate(getRedirectUrl(APP_ROUTES.USER_PROFILE))
+    //   });
+    //   return;
+    // }
 
     setLoading(true);
     const request: CheckoutRequestDto = {
@@ -116,12 +116,14 @@ const CheckoutPage = () => {
       })))
     }
 
+    console.log('Checkout request:', request);
+
     CheckoutService.createCheckout(request)
       .then((data: CheckoutResponseDto) => {
-        if (data.bankTransfer) {
+        if (data.isBankTransfer) {
           window.location.href = data.urlRedirect;
         } else {
-          window.location.href = APP_ROUTES.PAYMENT_RESULT(data.orderId);
+          window.location.href = APP_ROUTES.PAYMENT_SUCCESS_WITH_ORDER_ID(data.orderId);
         }
       })
       .catch(error => {

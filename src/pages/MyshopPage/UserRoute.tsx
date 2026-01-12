@@ -13,6 +13,7 @@ import LandingPage from "../../components/User/LandingPage/LandingPage";
 import { ProductsPage } from "../../components/User/Products/ProductsPage";
 import { APP_ROUTES } from "../../constant";
 import { useAppSelector } from "../../hooks/useAppRedux";
+import PaymentSuccessView from "../../components/User/paymentResult/Success";
 
 const CartPage = lazy(() => import("../../components/User/Cart/CartPage"));
 // const CategoryPage = lazy(() => import('../../components/User/CategoryPage/CategoryPage'));
@@ -53,7 +54,7 @@ const UserRoute = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {location.pathname !== APP_ROUTES.HOME && <Header />}
-      <div className="flex-1 bg-gray-50">
+      <div className="flex-1 bg-gray-50"> 
         <Routes>
           <Route index element={<LandingPage />} />
           {/* <Route path={APP_ROUTES.HOME} element={<HomePage />} /> */}
@@ -68,7 +69,11 @@ const UserRoute = () => {
           {/* <Route path="/search" element={<FilterProductPage />} /> */}
           <Route path="/shop/:slug" element={<ShopPage />} />
           <Route
-            path={APP_ROUTES.PAYMENT_RESULT(":orderId")}
+            path={APP_ROUTES.PAYMENT_SUCCESS}
+            element={<PaymentResultPage />}
+          />
+          <Route
+            path={APP_ROUTES.PAYMENT_CANCEL}
             element={<PaymentResultPage />}
           />
 
