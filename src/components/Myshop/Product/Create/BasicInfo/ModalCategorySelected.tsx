@@ -51,8 +51,14 @@ const ModalCategorySelected = memo(({ opened, onClose, onSelect, selectedCategor
     }, [opened, selectedCategoryId, categories]);
 
     const getCategoriesByLevel = (level: number) => {
-        const parentId = level === 0 ? undefined : selectedPath[level - 1];
-        return categories.filter(cat => cat.level === level && cat.parentId === parentId);
+        const parentId = level === 0 ? null : selectedPath[level - 1];
+        const result = categories.filter(cat => {
+            // So sánh null-safe: cả null và undefined đều coi như không có parent
+            const categoryParentId = cat.parentId ?? null;
+            const targetParentId = parentId ?? null;
+            return cat.level === level && categoryParentId === targetParentId;
+        });
+        return result;
     };
 
     const handleCategoryClick = (categoryId: string, level: number) => {
