@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { CategoryDisplayDto } from "../../../types/CategoryType";
+import { CategoryService } from "../../../service/CategoryService";
 
 interface TrendingProps {
   id?: string;
@@ -49,10 +50,10 @@ const Trending = ({ id }: TrendingProps) => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
-        // const data = await CategoryService.getPublicCategoriesDisplay(
-        //   "HOMEPAGE"
-        // );
-        // setCategories(data);
+        const data = await CategoryService.getPublicCategoriesDisplay(
+          "HOMEPAGE"
+        );
+        setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
         setCategories([]);
