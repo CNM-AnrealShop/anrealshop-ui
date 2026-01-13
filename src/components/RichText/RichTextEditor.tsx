@@ -4,16 +4,16 @@ import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
-import { memo } from 'react';
-import { Text, type TextInputProps } from '@mantine/core';
+import { memo, useEffect } from 'react';
+import { Text } from '@mantine/core';
 
 interface RichTextEditorProps {
-    descriptionProps: TextInputProps; 
+    value?: string;
+    onChange?: (value: string) => void;
+    error?: React.ReactNode;
 }
 
-const TextEditor = memo(({ descriptionProps }: RichTextEditorProps) => {
-    const { value, onChange, error } = descriptionProps;
-
+const TextEditor = memo(({ value, onChange, error }: RichTextEditorProps) => {
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -24,14 +24,15 @@ const TextEditor = memo(({ descriptionProps }: RichTextEditorProps) => {
         ],
         content: (value as string) || '<p></p',
         onUpdate: ({ editor }) => {
-            const syntheticEvent = {
-                target: {
-                    value: editor.getHTML(),
-                },
-            } as React.ChangeEvent<HTMLInputElement>; 
-            onChange?.(syntheticEvent);
+            onChange?.(editor.getHTML()); 
         },
     });
+
+    useEffect(() => {
+        if (editor && value !== editor.getHTML()) {
+            editor.commands.setContent(value || '');
+        }
+    }, [value, editor]);
 
     return (
         <div>
@@ -69,7 +70,7 @@ const TextEditor = memo(({ descriptionProps }: RichTextEditorProps) => {
                     <MantineRichTextEditor.ControlsGroup>
                         <MantineRichTextEditor.Link />
                         <MantineRichTextEditor.Unlink />
-                    </MantineRichTextEditor.ControlsGroup>
+</MantineRichTextEditor.ControlsGroup>
 
                     <MantineRichTextEditor.ControlsGroup>
                         <MantineRichTextEditor.AlignLeft />

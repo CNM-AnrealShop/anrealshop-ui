@@ -66,7 +66,7 @@ export function ResetPassword(props: ResetPasswordProps) {
       setOtpSend(true);
     } catch (error: any) {
       form.setFieldError('email', 'Không thể gửi mã OTP. Vui lòng kiểm tra lại email.');
-      showErrorNotification('Gửi mã OTP thất bại', getErrorMessage(error?.response?.data));
+      showErrorNotification('Gửi mã OTP thất bại', getErrorMessage(error));
     } finally {
       setOtpSending(false);
     }
@@ -77,11 +77,11 @@ export function ResetPassword(props: ResetPasswordProps) {
 
     if (otpValue.length === 6) {
       try {
-        await OtpService.verifyOtp(form.values.email, otpValue);
+        await OtpService.verifyOtp(form.values.email, otpValue, 'RESET_PASSWORD');
         setVerifyOtp(true);
       } catch (error: any) {
         form.setFieldError('otp', 'Mã OTP không hợp lệ');
-        showErrorNotification('Xác thực mã OTP thất bại', getErrorMessage(error?.response?.data));
+        showErrorNotification('Xác thực mã OTP thất bại', getErrorMessage(error));
         setVerifyOtp(false);
       }
     } else {
@@ -112,7 +112,7 @@ export function ResetPassword(props: ResetPasswordProps) {
       form.reset();
     } catch (error: any) {
       form.setFieldError('password', 'Không thể đặt lại mật khẩu. Vui lòng thử lại.');
-      showErrorNotification('Gửi mã OTP thất bại', getErrorMessage(error?.response?.data));
+      showErrorNotification('Đặt lại mật khẩu thất bại', getErrorMessage(error));
     } finally {
       setResetting(false);
     }

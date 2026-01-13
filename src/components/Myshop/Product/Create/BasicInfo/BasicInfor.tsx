@@ -54,38 +54,39 @@ const BasicInfor = memo(({
         setCollapsed(prev => !prev);
     };
 
-    useEffect(() => {
-        if (isEditMode) return;
-        const fetchCategoriesSuggestions = async () => {
-            try {
-                const data = await CategoryService.getCategorySuggestionsByNameProduct(nameProps.value as string);
-                setCategoriesSuggestions(data);
-                if (!categoryIdProps.value && data.length > 0) {
-                    const formOnChange = categoryIdProps.onChange as (value: string | null) => void;
-                    formOnChange?.(data[0].id);
-                }
-                if (categoryPathProps.onChange && data.length > 0) {
-                    const cateSelected = data[0];
-                    const pathValue = cateSelected.urlPath || cateSelected.name;
-                    const pathOnChange = categoryPathProps.onChange as (value: string) => void;
-                    pathOnChange(pathValue);
-                } else if (categoryPathProps.onChange && !categoryIdProps.value) {
-                    const pathOnChange = categoryPathProps.onChange as (value: string) => void;
-                    pathOnChange('');
-                }
-            } catch (err) {
-                console.error("Lỗi lấy category:", err);
-                setCategoriesSuggestions([]);
-            }
-        };
-
-        const value = nameProps.value as string;
-        if (value && value.trim() !== '' && value.trim().length >= 10 && value.trim().length <= 255) {
-            fetchCategoriesSuggestions();
-        } else {
-            setCategoriesSuggestions([]);
-        }
-    }, [nameProps.value]);
+    // Disabled - user will select category from modal only
+    // useEffect(() => {
+    //     if (isEditMode) return;
+    //     const fetchCategoriesSuggestions = async () => {
+    //         try {
+    //             const data = await CategoryService.getCategorySuggestionsByNameProduct(nameProps.value as string);
+    //             setCategoriesSuggestions(data);
+    //             if (!categoryIdProps.value && data.length > 0) {
+    //                 const formOnChange = categoryIdProps.onChange as (value: string | null) => void;
+    //                 formOnChange?.(data[0].id);
+    //             }
+    //             if (categoryPathProps.onChange && data.length > 0) {
+    //                 const cateSelected = data[0];
+    //                 const pathValue = cateSelected.urlPath || cateSelected.name;
+    //                 const pathOnChange = categoryPathProps.onChange as (value: string) => void;
+    //                 pathOnChange(pathValue);
+    //             } else if (categoryPathProps.onChange && !categoryIdProps.value) {
+    //                 const pathOnChange = categoryPathProps.onChange as (value: string) => void;
+    //                 pathOnChange('');
+    //             }
+    //         } catch (err) {
+    //             console.error("Lỗi lấy category:", err);
+    //             setCategoriesSuggestions([]);
+    //         }
+    //     };
+    //
+    //     const value = nameProps.value as string;
+    //     if (value && value.trim() !== '' && value.trim().length >= 10 && value.trim().length <= 255) {
+    //         fetchCategoriesSuggestions();
+    //     } else {
+    //         setCategoriesSuggestions([]);
+    //     }
+    // }, [nameProps.value]);
 
     const handleCategorySearchChange = useDebouncedCallback(async (searchValue: string) => {
         try {
@@ -165,9 +166,12 @@ const BasicInfor = memo(({
                     />
 
                     <RichTextEditor
-                        descriptionProps={{
-                            ...descriptionProps
+                        value={descriptionProps.value as string}
+                        onChange={(val) => {
+                            const onChangeAny = descriptionProps.onChange as any;
+                            onChangeAny?.(val);
                         }}
+                        error={descriptionProps.error}
                     />
                 </Stack>
             )}

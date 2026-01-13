@@ -9,10 +9,10 @@ const getOtp = async (email: string, type: MailType): Promise<void> => {
     return response.data;
 }
 
-const verifyOtp = async (email: string, code: string): Promise<void> => {
+const verifyOtp = async (email: string, code: string, type: MailType): Promise<void> => {
     const response = await axiosInstance.post(
         API_ENDPOINTS.OTP.VERIFY_OTP,
-        { email, code }
+        { email, code, type }
     )
     return response.data;
 }
