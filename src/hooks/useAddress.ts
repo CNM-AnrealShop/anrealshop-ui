@@ -45,6 +45,7 @@ export const useAddress = (mode: TypeMode = 'user') => {
     };
 
     useEffect(() => {
+        setProvinces([]);
         // AddressService.getProvinceList()
         //     .then((data) => {
         //         setProvinces(data);

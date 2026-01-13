@@ -22,7 +22,6 @@ import CheckoutReview from './CheckoutReview';
 import ListProduct from './ListProductForShop';
 import PaymentMethod from './PaymentMethod';
 import Address from './address/Address';
-import { useURLParams } from '../../../hooks/useURLParams';
 
 
 const CheckoutPage = () => {
@@ -38,8 +37,6 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [itemLoading, setItemLoading] = useState(true);
   const [showAddressModal, setShowAddressModal] = useState(false);
-
-  const { getRedirectUrl } = useURLParams();
 
   const idItems: ItemsCheckoutRequest = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ORDER_ITEM_IDS) || '{}');
 

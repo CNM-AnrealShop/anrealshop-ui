@@ -13,7 +13,6 @@ import LandingPage from "../../components/User/LandingPage/LandingPage";
 import { ProductsPage } from "../../components/User/Products/ProductsPage";
 import { APP_ROUTES } from "../../constant";
 import { useAppSelector } from "../../hooks/useAppRedux";
-import PaymentSuccessView from "../../components/User/paymentResult/Success";
 
 const CartPage = lazy(() => import("../../components/User/Cart/CartPage"));
 // const CategoryPage = lazy(() => import('../../components/User/CategoryPage/CategoryPage'));
