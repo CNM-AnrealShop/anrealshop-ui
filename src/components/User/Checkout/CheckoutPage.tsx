@@ -22,7 +22,6 @@ import CheckoutReview from './CheckoutReview';
 import ListProduct from './ListProductForShop';
 import PaymentMethod from './PaymentMethod';
 import Address from './address/Address';
-import { useURLParams } from '../../../hooks/useURLParams';
 
 
 const CheckoutPage = () => {
@@ -38,8 +37,6 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [itemLoading, setItemLoading] = useState(true);
   const [showAddressModal, setShowAddressModal] = useState(false);
-
-  const { getRedirectUrl } = useURLParams();
 
   const idItems: ItemsCheckoutRequest = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ORDER_ITEM_IDS) || '{}');
 
@@ -70,7 +67,7 @@ const CheckoutPage = () => {
 
   const refreshFee = useCallback(() => {
     if (!selectedAddress || itemCheckoutInfo.length < 1) return;
-    setFeeLoading(true);
+    setFeeLoading(true); 
     const checkoutShippingFee: CheckoutShippingFee = {
       userAddressId: selectedAddress.id,
       checkoutItems: Object.fromEntries(
@@ -96,14 +93,14 @@ const CheckoutPage = () => {
       return;
     }
 
-    if (user && !user.verified) {
-      showErrorNotification({
-        title: "Xác thực trước khi đặt hàng",
-        message: "Vui lòng xác thực email trước khi đặt hàng.",
-        onClick: () => navigate(getRedirectUrl(APP_ROUTES.USER_PROFILE))
-      });
-      return;
-    }
+    // if (user && !user.verified) {
+    //   showErrorNotification({
+    //     title: "Xác thực trước khi đặt hàng",
+    //     message: "Vui lòng xác thực email trước khi đặt hàng.",
+    //     onClick: () => navigate(getRedirectUrl(APP_ROUTES.USER_PROFILE))
+    //   });
+    //   return;
+    // }
 
     setLoading(true);
     const request: CheckoutRequestDto = {
@@ -116,12 +113,14 @@ const CheckoutPage = () => {
       })))
     }
 
+    console.log('Checkout request:', request);
+
     CheckoutService.createCheckout(request)
       .then((data: CheckoutResponseDto) => {
-        if (data.bankTransfer) {
+        if (data.isBankTransfer) {
           window.location.href = data.urlRedirect;
         } else {
-          window.location.href = APP_ROUTES.PAYMENT_RESULT(data.orderId);
+          window.location.href = APP_ROUTES.PAYMENT_SUCCESS_WITH_ORDER_ID(data.orderId);
         }
       })
       .catch(error => {

@@ -14,7 +14,7 @@ import {
     type TextareaProps,
     type TextInputProps
 } from '@mantine/core';
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import RichTextEditor from '../../../../RichText/RichTextEditor';
@@ -37,7 +37,6 @@ interface BasicInforProps {
 
 const BasicInfor = memo(({
     isShowQuantity,
-    isEditMode = false,
     nameProps,
     sortDescriptionProps,
     priceProps,

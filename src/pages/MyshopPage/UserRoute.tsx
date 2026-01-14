@@ -53,7 +53,7 @@ const UserRoute = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {location.pathname !== APP_ROUTES.HOME && <Header />}
-      <div className="flex-1 bg-gray-50">
+      <div className="flex-1 bg-gray-50"> 
         <Routes>
           <Route index element={<LandingPage />} />
           {/* <Route path={APP_ROUTES.HOME} element={<HomePage />} /> */}
@@ -68,7 +68,11 @@ const UserRoute = () => {
           {/* <Route path="/search" element={<FilterProductPage />} /> */}
           <Route path="/shop/:slug" element={<ShopPage />} />
           <Route
-            path={APP_ROUTES.PAYMENT_RESULT(":orderId")}
+            path={APP_ROUTES.PAYMENT_SUCCESS}
+            element={<PaymentResultPage />}
+          />
+          <Route
+            path={APP_ROUTES.PAYMENT_CANCEL}
             element={<PaymentResultPage />}
           />
 

@@ -1,5 +1,5 @@
 import { Image } from "@mantine/core";
-import { BsBank, BsCashCoin, BsCreditCard2Front } from "react-icons/bs";
+import { BsBank, BsCashCoin, BsCreditCard2Front, BsStripe } from "react-icons/bs";
 import type { PaymentGatewayType } from "../types/CheckoutType";
 
 export interface PaymentMethodInfo {
@@ -37,6 +37,12 @@ export const paymentMethodsDataDefault: PaymentMethodInfo[] = [
     name: 'VNPAY',
     description: 'Thanh toán qua cổng VNPAY',
     icon: <VNPayLogo size={24} />
+  },
+  {
+    id: 'stripe',
+    name: 'Stripe',
+    description: 'Thanh toán qua cổng Stripe',
+    icon: <BsStripe size={24} />
   },
   {
     id: 'credit_card',

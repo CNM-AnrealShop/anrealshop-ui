@@ -45,14 +45,15 @@ export const useAddress = (mode: TypeMode = 'user') => {
     };
 
     useEffect(() => {
-        AddressService.getProvinceList()
-            .then((data) => {
-                setProvinces(data);
-            })
-            .catch(error => {
-                console.log(error)
-                showErrorNotification("Tải danh sách tỉnh thất bại!", getErrorMessage(error));
-            })
+        setProvinces([]);
+        // AddressService.getProvinceList()
+        //     .then((data) => {
+        //         setProvinces(data);
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //         showErrorNotification("Tải danh sách tỉnh thất bại!", getErrorMessage(error));
+        //     })
     }, [])
 
     useEffect(() => {
