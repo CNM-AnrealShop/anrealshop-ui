@@ -48,6 +48,7 @@ const ListView = ({
             <Table.Th style={{ textAlign: 'center' }}>Giá</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Tồn kho</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Đã bán</Table.Th>
+            <Table.Th style={{ textAlign: 'center', width: '60px' }}>CL</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Trạng thái</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Hoạt động</Table.Th>
           </Table.Tr>
