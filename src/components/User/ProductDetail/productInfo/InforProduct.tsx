@@ -100,7 +100,7 @@ const InforProduct = ({
     CartService.addItemToCart(cartItemDto)
       .then((data) => {
         showSuccessNotification("Thông báo", "Sản phẩm đã được thêm vào giỏ hàng thành công.");
-        if (data.isNew)
+        if (data.data.isNew)
           dispatch(addToCart());
       })
       .catch((error) => {
