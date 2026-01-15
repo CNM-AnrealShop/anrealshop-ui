@@ -7,8 +7,10 @@ import {
   Image,
   Stack,
   Switch,
-  Text
+  Text,
+  Tooltip
 } from '@mantine/core';
+import { FiAlertTriangle } from 'react-icons/fi';
 import { useProductStatusColor, useProductStatusIcon, useProductStatusLabel } from '../../../../../../hooks/useProductStatus';
 import type { MyShopProductDto } from '../../../../../../types/ProductType';
 import ProductActionMenu from '../ProductActionMenu';
@@ -147,6 +149,13 @@ const ProductCard = ({
           <Text size="sm" c={product.quantity === 0 ? 'red' : 'dimmed'} fw={product.quantity === 0 ? 500 : 400}>
             {product.quantity > 0 ? `Còn ${product.quantity}` : 'Hết hàng'}
           </Text>
+          {(typeof product.approvalScore === 'number' && product.approvalScore < 60) && (
+            <Tooltip label={`Chất lượng sản phẩm chưa tốt (${product.approvalScore}/100). Cần cải thiện mô tả hoặc hình ảnh.`}>
+              <div style={{ display: 'inline-flex', cursor: 'pointer' }}>
+                <FiAlertTriangle size={18} color="#fa5252" />
+              </div>
+            </Tooltip>
+          )}
         </Group>
       </Stack>
 

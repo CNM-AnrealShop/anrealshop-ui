@@ -5,8 +5,10 @@ import {
   Image,
   Switch,
   Table,
-  Text
+  Text,
+  Tooltip
 } from '@mantine/core';
+import { FiAlertTriangle } from 'react-icons/fi';
 import ProductActionMenu from '../ProductActionMenu';
 import { useProductStatusIcon, useProductStatusColor, useProductStatusLabel } from '../../../../../../hooks/useProductStatus';
 import type { MyShopProductDto } from '../../../../../../types/ProductType';
@@ -104,6 +106,15 @@ const ProductTableRow = ({
         </Text>
       </Table.Td>
       <Table.Td style={{ textAlign: 'center' }}>{product.sold}</Table.Td>
+      <Table.Td style={{ textAlign: 'center' }}>
+        {(typeof product.approvalScore === 'number' && product.approvalScore < 60) && (
+          <Tooltip label={`Chất lượng sản phẩm chưa tốt (${product.approvalScore}/100). Cần cải thiện mô tả hoặc hình ảnh.`}>
+            <div style={{ display: 'inline-flex', cursor: 'pointer' }}>
+              <FiAlertTriangle size={18} color="#fa5252" />
+            </div>
+          </Tooltip>
+        )}
+      </Table.Td>
       <Table.Td style={{ textAlign: 'center' }}>
         <Badge
           leftSection={<StatusIcon size={16} style={{ color: statusIconColor }} />}

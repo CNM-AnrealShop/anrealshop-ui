@@ -37,7 +37,7 @@ export const formatDate = (dateString: string): string => {
 
 export const formatDateForBe = (date: Date | null): string => {
   if (!date) return '';
-  return format(date, 'dd-MM-yyyy', { locale: vi });
+  return format(date, 'yyyy-MM-dd'); // MySQL format: YYYY-MM-DD
 };
 
 export const getDefaultDateRange_Now_Yesterday = (): [Date, Date] => {

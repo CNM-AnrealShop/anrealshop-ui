@@ -52,6 +52,7 @@ export interface MyShopProductDto {
 
   restrictedReason?: string;
   restricted?: boolean;
+  approvalScore?: number;
 
   productSkus?: MyShopProductSkuDto[];
   baseShopDto?: BaseShopDto;
