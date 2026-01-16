@@ -2,8 +2,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import type { ChatMessage, ChatResponse } from "../../types/ChatType";
 import { ChatService } from "../../service/ChatService";
 import { useAppSelector } from "../../hooks/useAppRedux";
+import { BASE_FE_URL } from "../../constant";
 
 const DEBOUNCE_TIME = 15000;
+
+const getProductUrl = (productId: string): string => {
+  const baseUrl = BASE_FE_URL || window.location.origin;
+  return `${baseUrl}/products/${productId}`;
+};
 
 export const useChatbox = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -101,6 +107,7 @@ export const useChatbox = () => {
         responseType: aiResponse.type || "Normal",
         imageUrl: aiResponse.imageUrl,
         imageUrls: aiResponse.imageUrls,
+        productIds: aiResponse.productIds,
       };
 
       setMessages((prev) => [...prev, aiMessage]);
@@ -275,6 +282,32 @@ export const ChatBox = () => {
   const renderMessageContent = (msg: ChatMessage) => {
     const content = msg.content;
     const imageUrls = msg.imageUrls || (msg.imageUrl ? [msg.imageUrl] : []);
+    const productIds = msg.productIds || [];
+
+    // Component nút xem chi tiết
+    const ViewDetailButton = ({ productId }: { productId: string }) => (
+      <a
+        href={getProductUrl(productId)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1 mt-2 px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 rounded-full hover:bg-primary hover:text-white transition-all duration-200 no-underline"
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        Xem chi tiết
+      </a>
+    );
 
     if (imageUrls.length === 0) {
       return <div className="flex-1 whitespace-pre-wrap">{content}</div>;
@@ -299,14 +332,19 @@ export const ChatBox = () => {
               >
                 <div className="whitespace-pre-wrap mb-2">{product.trim()}</div>
                 {imageUrls[idx] && (
-                  <div className="my-2 rounded-lg overflow-hidden max-w-[180px] shadow-sm">
-                    <img
-                      src={imageUrls[idx]}
-                      alt={`Sản phẩm ${idx + 1}`}
-                      loading="lazy"
-                      onClick={() => openImageModal(imageUrls[idx])}
-                      className="w-full h-auto max-h-36 object-cover block cursor-pointer rounded-md transition-transform duration-200 hover:scale-[1.03]"
-                    />
+                  <div className="my-2">
+                    <div className="rounded-lg overflow-hidden max-w-[180px] shadow-sm">
+                      <img
+                        src={imageUrls[idx]}
+                        alt={`Sản phẩm ${idx + 1}`}
+                        loading="lazy"
+                        onClick={() => openImageModal(imageUrls[idx])}
+                        className="w-full h-auto max-h-36 object-cover block cursor-pointer rounded-md transition-transform duration-200 hover:scale-[1.03]"
+                      />
+                    </div>
+                    {productIds[idx] && (
+                      <ViewDetailButton productId={productIds[idx]} />
+                    )}
                   </div>
                 )}
               </div>
@@ -324,19 +362,21 @@ export const ChatBox = () => {
         <div className="flex-1 whitespace-pre-wrap">
           {content}
           {imageUrls.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-3 mt-3">
               {imageUrls.map((url, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-lg overflow-hidden max-w-[120px] shadow-sm"
-                >
-                  <img
-                    src={url}
-                    alt={`Hình ${idx + 1}`}
-                    loading="lazy"
-                    onClick={() => openImageModal(url)}
-                    className="w-full h-auto max-h-24 object-cover block cursor-pointer rounded-md transition-transform duration-200 hover:scale-[1.03]"
-                  />
+                <div key={idx} className="flex flex-col items-start">
+                  <div className="rounded-lg overflow-hidden max-w-[120px] shadow-sm">
+                    <img
+                      src={url}
+                      alt={`Hình ${idx + 1}`}
+                      loading="lazy"
+                      onClick={() => openImageModal(url)}
+                      className="w-full h-auto max-h-24 object-cover block cursor-pointer rounded-md transition-transform duration-200 hover:scale-[1.03]"
+                    />
+                  </div>
+                  {productIds[idx] && (
+                    <ViewDetailButton productId={productIds[idx]} />
+                  )}
                 </div>
               ))}
             </div>
@@ -357,14 +397,23 @@ export const ChatBox = () => {
             <span key={idx}>
               {part}
               {hasImage && (
-                <div className="my-2 rounded-lg overflow-hidden max-w-[180px] shadow-sm">
-                  <img
-                    src={imageUrls[currentImageIndex]}
-                    alt={`Hình ${currentImageIndex + 1}`}
-                    loading="lazy"
-                    onClick={() => openImageModal(imageUrls[currentImageIndex])}
-                    className="w-full h-auto max-h-36 object-cover block cursor-pointer rounded-md transition-transform duration-200 hover:scale-[1.03]"
-                  />
+                <div className="my-2">
+                  <div className="rounded-lg overflow-hidden max-w-[180px] shadow-sm">
+                    <img
+                      src={imageUrls[currentImageIndex]}
+                      alt={`Hình ${currentImageIndex + 1}`}
+                      loading="lazy"
+                      onClick={() =>
+                        openImageModal(imageUrls[currentImageIndex])
+                      }
+                      className="w-full h-auto max-h-36 object-cover block cursor-pointer rounded-md transition-transform duration-200 hover:scale-[1.03]"
+                    />
+                  </div>
+                  {productIds[currentImageIndex] && (
+                    <ViewDetailButton
+                      productId={productIds[currentImageIndex]}
+                    />
+                  )}
                 </div>
               )}
             </span>

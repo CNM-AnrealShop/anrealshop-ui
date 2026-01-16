@@ -7,6 +7,7 @@ export interface ChatMessage {
   responseType?: "Greeting" | "NotFashion" | "Normal";
   imageUrl?: string;
   imageUrls?: string[];
+  productIds?: string[];
 }
 
 export interface ChatResponse {
@@ -14,6 +15,7 @@ export interface ChatResponse {
   type?: "Greeting" | "NotFashion" | "Normal";
   imageUrl?: string;
   imageUrls?: string[];
+  productIds?: string[];
 }
 
 export interface ChatHistoryResponse {

@@ -34,6 +34,7 @@ export const ChatService = {
         type: data.type || "Normal",
         imageUrl: data.imageUrl || null,
         imageUrls: data.imageUrls || undefined,
+        productIds: data.productIds || undefined,
       };
     } catch (error) {
       console.error("Error calling n8n webhook:", error);
